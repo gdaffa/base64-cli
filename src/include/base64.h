@@ -115,7 +115,7 @@ char *base64Decode(char *encoded, size_t encodedSize)
    binaryLength -= 2 * eqlPadSize;
 
    size_t decodedLength = binaryLength / 8;
-   char   *decoded      = calloc(1, decodedLength + 1);
+   char   *decoded      = calloc(decodedLength + 1, 1);
 
    // buffer to hold 8 bit of binary for `strtol`
    char buffer[BYTE_SIZE + 1];
