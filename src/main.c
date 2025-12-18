@@ -2,16 +2,34 @@
 #include <stdlib.h>
 #include <string.h>
 #include "include/base64.h"
+#include "include/utils.h"
+
+void exitInvalidArgs() {
+   char *message =
+      "Invalid arguments.\n"
+      "Usage:\n"
+      "- Encoding: b64 -e <raw-text>\n"
+      "- Decoding: b64 -d <encoded-text>\n";
+   failureExit(message);
+}
 
 int main(int argc, char* argv[]) {
-   if (argc < 2) {
-      printf("Invalid arguments.\n");
-      printf("Usage: b64 <raw>\n");
-      return 1;
+   if (argc < 3) {
+      exitInvalidArgs();
    }
 
-   char *encoded = base64Encode(argv[1], strlen(argv[1]));
-   puts(encoded);
-   free(encoded);
+   char *result;
+
+   if (argv[1][1] == 'e') {
+      result = base64Encode(argv[2], strlen(argv[2]));
+   } else if (argv[1][1] == 'd') {
+      result = base64Decode(argv[2], strlen(argv[2]) + 1);
+   } else {
+      exitInvalidArgs();
+   }
+
+   puts(result);
+
+   free(result);
    return 0;
 }
