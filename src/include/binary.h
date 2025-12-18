@@ -1,5 +1,5 @@
-#ifndef BINARY_H
-#define BINARY_H
+#ifndef _BINARY_H
+#define _BINARY_H
 
 #define BYTE_SIZE 8
 
