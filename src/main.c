@@ -8,8 +8,8 @@ void exitInvalidArgs() {
    char *message =
       "Invalid arguments.\n"
       "Usage:\n"
-      "- Encoding: b64 -e <raw-text>\n"
-      "- Decoding: b64 -d <encoded-text>\n";
+      "\tb64 -e <raw>       Encode the text into base64 text.\n"
+      "\tb64 -d <encoded>   Decode base64 text into regular text.";
    failureExit(message);
 }
 
