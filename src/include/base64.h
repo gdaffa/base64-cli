@@ -14,6 +14,31 @@ const char pB64_charMap[] =
    "abcdefghijklmnopqrstuvwxyz"
    "0123456789+/";
 
+char pB64_revMap[64];
+bool pB64_isRevMapInit = false;
+
+/**
+ * Initialize reverse map for the decoder.
+ */
+void fB64_initReverseMap()
+{
+   memset(pB64_revMap, -1, 64);
+
+   // alpha, upper and lower case
+   for (size_t i = 0; i < ALPHA_SIZE; ++i) {
+      pB64_revMap['A' + i] = i;
+      pB64_revMap['a' + i] = i + ALPHA_SIZE;
+   }
+   // numeric
+   for (size_t i = 0; i < 10; ++i) {
+      pB64_revMap['0' + i] = i + ALPHA_SIZE * 2;
+   }
+   pB64_revMap['+'] = 62;
+   pB64_revMap['/'] = 63;
+
+   pB64_isRevMapInit = true;
+}
+
 /**
  * Encode a string with base64 method. Return a heap string for ease of use.
  */
@@ -69,6 +94,10 @@ char *base64Decode(char *encoded, size_t encodedSize)
       failureExit("Invalid base64 string. Aborting the program.\n");
    }
 
+   if (!pB64_isRevMapInit) {
+      fB64_initReverseMap();
+   }
+
    // calculate equal padding
    size_t eqlPadSize = 0;
    for (size_t i = encodedSize - 3; i < encodedSize; i++) {
@@ -81,28 +110,8 @@ char *base64Decode(char *encoded, size_t encodedSize)
 
    size_t binaryIdx = 0;
    for (size_t encodedIdx = 0; encodedIdx < encodedLength; ++encodedIdx) {
-      size_t charMapIdx  = -1;
       char   encodedChar = encoded[encodedIdx];
-
-      // search the index of encoded char according to `pB64_charMap`
-      if ((size_t) (encodedChar - 'A') < ALPHA_SIZE) {
-         charMapIdx = encodedChar - 'A';
-      }
-      else if ((size_t) (encodedChar - 'a') < ALPHA_SIZE) {
-         charMapIdx = encodedChar - 'a' + ALPHA_SIZE;
-      }
-      else if ((size_t) (encodedChar - '0') < 10) {
-         charMapIdx = encodedChar - '0' + ALPHA_SIZE * 2;
-      }
-      else if (encodedChar == '+') {
-         charMapIdx = 62;
-      }
-      else if (encodedChar == '/') {
-         charMapIdx = 63;
-      }
-      else {
-         failureExit("Invalid base64 string. Aborting the program.\n");
-      }
+      size_t charMapIdx  = pB64_revMap[encodedChar];
 
       // encode the index to 6 bit of binary
       char buffer[BYTE_SIZE];
