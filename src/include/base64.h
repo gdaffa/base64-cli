@@ -91,7 +91,7 @@ char *base64Encode(unsigned char *raw, size_t rawSize)
 char *base64Decode(char *encoded, size_t encodedSize)
 {
    if ((encodedSize - 1) % 4 != 0) {
-      failureExit("Invalid base64 string. Aborting the program.\n");
+      failureExit("Invalid base64 string. Aborting the program.");
    }
 
    if (!pB64_isRevMapInit) {
@@ -112,6 +112,10 @@ char *base64Decode(char *encoded, size_t encodedSize)
    for (size_t encodedIdx = 0; encodedIdx < encodedLength; ++encodedIdx) {
       char   encodedChar = encoded[encodedIdx];
       size_t charMapIdx  = pB64_revMap[encodedChar];
+
+      if (charMapIdx == -1) {
+         failureExit("Invalid base64 string. Aborting the program.");
+      }
 
       // encode the index to 6 bit of binary
       char buffer[BYTE_SIZE];
