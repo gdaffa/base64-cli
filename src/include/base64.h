@@ -1,7 +1,8 @@
 #ifndef _BASE64_H
 #define _BASE64_H
 
-#define ALPHA_LENGTH 26
+#define ALPHA_SIZE 26
+#define B64_READ_SIZE 6
 
 #include <stdlib.h>
 #include <string.h>
@@ -18,34 +19,34 @@ const char pB64_charMap[] =
  */
 char *base64Encode(unsigned char *raw, size_t rawSize)
 {
-   // calculate zero (0) padding for the binary,
-   // and equal (=) padding for the encoded text
+   // calculate equal padding for the encoded text
    size_t remainder  = rawSize % 3;
    size_t eqlPadSize = 3 - (remainder == 0 ? 3 : remainder);
-   size_t zerPadSize = 2 * eqlPadSize;
 
    size_t binaryLength;
    char   *binary = strToBinary(raw, rawSize, &binaryLength);
 
-   if (zerPadSize > 0) {
+   if (eqlPadSize > 0) {
+      // zero padding is always 2 * eqlPadSize
+      size_t zerPadSize      = 2 * eqlPadSize;
       size_t oldBinaryLength = binaryLength;
+
       binaryLength += zerPadSize;
       binary        = realloc(binary, binaryLength);
       memset(binary + oldBinaryLength, '0', zerPadSize);
    }
 
-   size_t encodedSize = binaryLength / 6 + eqlPadSize + 1;
-   char   *encoded    = malloc(encodedSize);
-   encoded[encodedSize - 1] = '\0';
+   size_t encodedSize = binaryLength / B64_READ_SIZE + eqlPadSize + 1;
+   char   *encoded    = calloc(encodedSize, 1);
 
    // buffer to hold 6 bit of binary for `strtol`
-   char   buffer[7];
-   size_t encodedIdx = 0;
+   char buffer[B64_READ_SIZE + 1];
+   buffer[B64_READ_SIZE] = '\0';
 
    // decode 6 bit of binary to a single character defined in `pB64_charMap`
-   for (size_t binaryIdx = 0; binaryIdx < binaryLength; binaryIdx += 6) {
-      memcpy(buffer, binary + binaryIdx, 6);
-      buffer[6] = '\0';
+   size_t encodedIdx = 0;
+   for (size_t binaryIdx = 0; binaryIdx < binaryLength; binaryIdx += B64_READ_SIZE) {
+      memcpy(buffer, binary + binaryIdx, B64_READ_SIZE);
 
       size_t charMapIdx   = strtol(buffer, NULL, 2);
       encoded[encodedIdx] = pB64_charMap[charMapIdx];
@@ -75,7 +76,7 @@ char *base64Decode(char *encoded, size_t encodedSize)
    }
 
    size_t encodedLength = encodedSize - 1 - eqlPadSize;
-   size_t binaryLength  = encodedLength * 6;
+   size_t binaryLength  = encodedLength * B64_READ_SIZE;
    char   *binary       = malloc(binaryLength);
 
    size_t binaryIdx = 0;
@@ -84,14 +85,14 @@ char *base64Decode(char *encoded, size_t encodedSize)
       char   encodedChar = encoded[encodedIdx];
 
       // search the index of encoded char according to `pB64_charMap`
-      if ((size_t) (encodedChar - 'A') < ALPHA_LENGTH) {
+      if ((size_t) (encodedChar - 'A') < ALPHA_SIZE) {
          charMapIdx = encodedChar - 'A';
       }
-      else if ((size_t) (encodedChar - 'a') < ALPHA_LENGTH) {
-         charMapIdx = encodedChar - 'a' + ALPHA_LENGTH;
+      else if ((size_t) (encodedChar - 'a') < ALPHA_SIZE) {
+         charMapIdx = encodedChar - 'a' + ALPHA_SIZE;
       }
       else if ((size_t) (encodedChar - '0') < 10) {
-         charMapIdx = encodedChar - '0' + ALPHA_LENGTH * 2;
+         charMapIdx = encodedChar - '0' + ALPHA_SIZE * 2;
       }
       else if (encodedChar == '+') {
          charMapIdx = 62;
@@ -106,15 +107,15 @@ char *base64Decode(char *encoded, size_t encodedSize)
       // encode the index to 6 bit of binary
       char buffer[BYTE_SIZE];
       fBin_parseChar(charMapIdx, buffer);
-      memcpy(binary + binaryIdx, buffer + 2, 6);
+      memcpy(binary + binaryIdx, buffer + 2, B64_READ_SIZE);
 
-      binaryIdx += 6;
+      binaryIdx += B64_READ_SIZE;
    }
 
    // remove zero padding, zero padding is always 2 * eqlPadSize
    binaryLength -= 2 * eqlPadSize;
 
-   size_t decodedLength = binaryLength / 8;
+   size_t decodedLength = binaryLength / BYTE_SIZE;
    char   *decoded      = calloc(decodedLength + 1, 1);
 
    // buffer to hold 8 bit of binary for `strtol`
