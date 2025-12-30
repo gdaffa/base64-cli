@@ -4,10 +4,8 @@
 #define ALPHA_SIZE 26
 #define B64_READ_SIZE 6
 
-#include <stdlib.h>
-#include <string.h>
-#include "binary.h"
 #include "utils.h"
+#include "binary.h"
 
 const char pB64_charMap[] =
    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -62,7 +60,7 @@ char *base64Encode(unsigned char *raw, size_t rawSize, size_t *resultLengthPtr)
    }
 
    size_t encodedLength = binaryLength / B64_READ_SIZE + eqlPadSize;
-   char   *encoded      = calloc(encodedLength + 1, 1);
+   char   *encoded      = malloc2(encodedLength + 1);
 
    // buffer to hold 6 bit of binary for `strtol`
    char buffer[B64_READ_SIZE + 1];
@@ -108,7 +106,7 @@ char *base64Decode(char *encoded, size_t encodedSize, size_t *resultLengthPtr)
 
    size_t encodedLength = encodedSize - 1 - eqlPadSize;
    size_t binaryLength  = encodedLength * B64_READ_SIZE;
-   char   *binary       = malloc(binaryLength);
+   char   *binary       = malloc2(binaryLength);
 
    size_t binaryIdx = 0;
    for (size_t encodedIdx = 0; encodedIdx < encodedLength; ++encodedIdx) {
@@ -131,7 +129,7 @@ char *base64Decode(char *encoded, size_t encodedSize, size_t *resultLengthPtr)
    binaryLength -= 2 * eqlPadSize;
 
    size_t decodedLength = binaryLength / BYTE_SIZE;
-   char   *decoded      = calloc(decodedLength + 1, 1);
+   char   *decoded      = malloc2(decodedLength + 1);
 
    // buffer to hold 8 bit of binary for `strtol`
    char buffer[BYTE_SIZE + 1];

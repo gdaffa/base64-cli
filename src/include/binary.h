@@ -3,8 +3,7 @@
 
 #define BYTE_SIZE 8
 
-#include <stdlib.h>
-#include <string.h>
+#include "utils.h"
 
 /**
  * Transform a char (1 byte) to a binary format. Excluding null terminator.
@@ -31,7 +30,7 @@ void fBin_parseChar(unsigned char chr, char *binaryHolder)
 char* strToBinary(char *str, size_t strSize, size_t *binaryLengthPtr)
 {
    size_t binarySize = strSize * BYTE_SIZE + 1;
-   char   *binary    = malloc(binarySize);
+   char   *binary    = malloc2(binarySize);
 
    if (binaryLengthPtr != NULL) {
       *binaryLengthPtr = binarySize - 1;

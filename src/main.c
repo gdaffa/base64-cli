@@ -118,10 +118,7 @@ int main(int argc, unsigned char *argv[])
       inputSize = ftell(fptr);
       fseek(fptr, 0, SEEK_SET);
 
-      input = malloc(inputSize);
-      if (input == NULL) {
-         failureExit("ERROR: Not enough memory to read the file.");
-      }
+      input = malloc2(inputSize);
       fread(input, 1, inputSize, fptr);
       fclose(fptr);
    }
