@@ -42,7 +42,7 @@ void fB64_initReverseMap()
 /**
  * Encode a string with base64 method. Return a heap string for ease of use.
  */
-char *base64Encode(unsigned char *raw, size_t rawSize)
+char *base64Encode(unsigned char *raw, size_t rawSize, size_t *resultLengthPtr)
 {
    // calculate equal padding for the encoded text
    size_t remainder  = rawSize % 3;
@@ -61,8 +61,8 @@ char *base64Encode(unsigned char *raw, size_t rawSize)
       memset(binary + oldBinaryLength, '0', zerPadSize);
    }
 
-   size_t encodedSize = binaryLength / B64_READ_SIZE + eqlPadSize + 1;
-   char   *encoded    = calloc(encodedSize, 1);
+   size_t encodedLength = binaryLength / B64_READ_SIZE + eqlPadSize;
+   char   *encoded      = calloc(encodedLength + 1, 1);
 
    // buffer to hold 6 bit of binary for `strtol`
    char buffer[B64_READ_SIZE + 1];
@@ -82,13 +82,15 @@ char *base64Encode(unsigned char *raw, size_t rawSize)
       memset(encoded + encodedIdx, '=', eqlPadSize);
    }
 
+   *resultLengthPtr = encodedLength;
+
    return encoded;
 }
 
 /**
  * Decode base64 text to 1 byte character. Return a heap string for ease of use.
  */
-char *base64Decode(char *encoded, size_t encodedSize)
+char *base64Decode(char *encoded, size_t encodedSize, size_t *resultLengthPtr)
 {
    if ((encodedSize - 1) % 4 != 0) {
       failureExit("Invalid base64 string. Aborting the program.");
@@ -142,6 +144,8 @@ char *base64Decode(char *encoded, size_t encodedSize)
       decoded[decodedIdx] = strtol(buffer, NULL, 2);
       binaryIdx += BYTE_SIZE;
    }
+
+   *resultLengthPtr = decodedLength;
 
    return decoded;
 }
