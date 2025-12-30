@@ -1,7 +1,9 @@
 # Base64 CLI
 
-CLI program to encode and decode base64 format. For file support, to
-encode/decode a file are still in develop.
+CLI program to encode and decode base64 format. This program works by read the
+input, convert each input character to a binary format, and parse the input to
+encoded/decoded base64 format. The program has a support to read and write to a
+file with the current argument.
 
 ## Prerequisites / Installation
 
@@ -20,17 +22,28 @@ gcc src/main.c -o b64
 > [!TIP]
 > To optimize the peformance consider using -O flag.
 
-The program has 2 different arguments:
-- `-e <raw>`: Encode the text into base64 text, excluding the null terminator.
-- `-d <encoded>`: Decode base64 text into regular text.
+And run the program with this command:
+```bash
+b64 [<options>] <input>
+# or
+b64 [<options>] --file <inputfile>
+```
 
-The program requires either `-e` option, or `-d` option.
+The program has 4 different options:
+- `-e --encode`: Encode the text into base64 text, excluding the null
+                 terminator.
+- `-d --decode`: Decode base64 text into regular text.
+- `-f --file <inputfile>`: Read the input from `<inputfile>` file.
+- `-o --output <outputfile>`: Write the result to `<outputfile>` file.
+
+If the input file is not provided, the program read the input from the
+arguments. If the output file is not provided, the program will print the result
+to the terminal.
 
 ## Example
 
 Command line:
-```
-gcc -O3 src/main.c -o b64
+```bash
 ./b64 -e "Hello World"
 ```
 
@@ -38,7 +51,3 @@ Output:
 ```
 SGVsbG8gV29ybGQ=
 ```
-
-> [!TIP]
-> The result can be stored to a file using `>` operator in the terminal. This
-> trick should work on all OS, including Windows.
