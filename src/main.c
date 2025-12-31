@@ -23,7 +23,7 @@ void exitInvalidArgs() {
    failureExit(message);
 }
 
-int main(int argc, unsigned char *argv[])
+int main(int argc, char **argv)
 {
    /**
     * 001 : operation has defined (encode/decode)
