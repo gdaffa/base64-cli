@@ -12,7 +12,7 @@ const char pB64_charMap[] =
    "abcdefghijklmnopqrstuvwxyz"
    "0123456789+/";
 
-char pB64_revMap[256];
+int  pB64_revMap[UINT8_MAX + 1];
 bool pB64_isRevMapInit = false;
 
 /**
@@ -20,7 +20,7 @@ bool pB64_isRevMapInit = false;
  */
 void fB64_initReverseMap()
 {
-   memset(pB64_revMap, -1, 256);
+   memset(pB64_revMap, -1, UINT8_MAX + 1);
 
    // alpha, upper and lower case
    for (size_t i = 0; i < ALPHA_SIZE; ++i) {
@@ -40,7 +40,7 @@ void fB64_initReverseMap()
 /**
  * Encode a string with base64 method. Return a heap string for ease of use.
  */
-char *base64Encode(unsigned char *raw, size_t rawSize, size_t *resultLengthPtr)
+char *base64Encode(char *raw, size_t rawSize, size_t *resultLengthPtr)
 {
    // calculate equal padding for the encoded text
    size_t remainder  = rawSize % 3;
@@ -110,8 +110,8 @@ char *base64Decode(char *encoded, size_t encodedSize, size_t *resultLengthPtr)
 
    size_t binaryIdx = 0;
    for (size_t encodedIdx = 0; encodedIdx < encodedLength; ++encodedIdx) {
-      char   encodedChar = encoded[encodedIdx];
-      size_t charMapIdx  = pB64_revMap[encodedChar];
+      uint8_t encodedChar = encoded[encodedIdx];
+      int     charMapIdx  = pB64_revMap[encodedChar];
 
       if (charMapIdx == -1) {
          failureExit("Invalid base64 string. Aborting the program.");

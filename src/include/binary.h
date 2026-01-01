@@ -6,9 +6,9 @@
 #include "utils.h"
 
 /**
- * Transform a char (1 byte) to a binary format. Excluding null terminator.
+ * Transform a char (1 byte) to a binary format.
  */
-void fBin_parseChar(unsigned char chr, char *binaryHolder)
+void fBin_parseChar(char chr, char *binaryHolder)
 {
    //! loop unrolling for faster execution
    binaryHolder[7] = chr & 1 ? '1' : '0';

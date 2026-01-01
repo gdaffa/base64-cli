@@ -25,6 +25,7 @@ void exitInvalidArgs() {
 
 int main(int argc, char **argv)
 {
+   size_t uargc = argc;
    /**
     * 001 : operation has defined (encode/decode)
     * 010 : input has defined (file/argv)
@@ -41,15 +42,15 @@ int main(int argc, char **argv)
    const size_t optsLength = sizeof(opts) / sizeof(Option);
 
    bool isEncode = true;
-   char *inputFilename  = NULL;
+   char *inputFilename  = NULL; 
    char *outputFilename = NULL;
 
-   unsigned char *input;
+   char   *input;
    size_t inputSize;
 
-   for (size_t argIdx = 1; argIdx < argc; ++argIdx) {
-      const unsigned char *arg = argv[argIdx];
-      bool isArgValid = false;
+   for (size_t argIdx = 1; argIdx < uargc; ++argIdx) {
+      char   *arg = argv[argIdx];
+      bool   isArgValid = false;
 
       Option opt;
       char   *optVal;
