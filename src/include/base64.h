@@ -12,7 +12,7 @@ const char pB64_charMap[] =
    "abcdefghijklmnopqrstuvwxyz"
    "0123456789+/";
 
-char pB64_revMap[64];
+char pB64_revMap[256];
 bool pB64_isRevMapInit = false;
 
 /**
@@ -20,7 +20,7 @@ bool pB64_isRevMapInit = false;
  */
 void fB64_initReverseMap()
 {
-   memset(pB64_revMap, -1, 64);
+   memset(pB64_revMap, -1, 256);
 
    // alpha, upper and lower case
    for (size_t i = 0; i < ALPHA_SIZE; ++i) {
