@@ -56,11 +56,13 @@ int main(int argc, char **argv)
 
       for (size_t optIdx = 0; optIdx < optsLength; optIdx++) {
          opt = opts[optIdx];
+
+         bool isMatchShort = strcmp(arg, opt.short_) == 0;
+         bool isMatchLong  = strcmp(arg, opt.long_) == 0;
+         bool hasNext      = argIdx + opt.isReadNextVal < uargc;
+
          // if the argument match and next argument is available and required
-         if (
-            strcmp(arg, opt.short_) == 0 || strcmp(arg, opt.long_) == 0
-            && argIdx + opt.isReadNextVal < argc
-         ) {
+         if ((isMatchShort || isMatchLong) && hasNext) {
             isArgValid = !(mode & opt.fillMode);
             optVal     = opt.isReadNextVal ? argv[argIdx + 1] : NULL;
 
