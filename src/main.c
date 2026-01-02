@@ -122,7 +122,9 @@ int main(int argc, char **argv)
       fseek(fptr, 0, SEEK_SET);
 
       input = malloc2(inputSize);
-      fread(input, 1, inputSize, fptr);
+      if (fread(input, 1, inputSize, fptr) < inputSize) {
+         failureExit(ERR_MSG_FREAD);
+      }
       fclose(fptr);
    }
 
@@ -138,7 +140,9 @@ int main(int argc, char **argv)
       if (fptr == NULL) {
          failureExit(ERR_MSG_FWRITE);
       }
-      fwrite(output, 1, outputSize, fptr);
+      if (fwrite(output, 1, outputSize, fptr) < outputSize) {
+         failureExit(ERR_MSG_FWRITE);
+      }
       fclose(fptr);
    }
 
