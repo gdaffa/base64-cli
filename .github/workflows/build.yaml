@@ -25,14 +25,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Update MacOS Dependencies
-        if: matrix.os == 'macos-latest'
-        run: brew update && brew upgrade
-
-      - name: Update Linux Dependencies
-        if: matrix.os == 'ubuntu-latest'
-        run: apt update && apt upgrade
-
       - name: Compile The Program
         run: |
           mkdir bin
