@@ -45,8 +45,8 @@ int main(int argc, char **argv)
    char *inputFilename  = NULL; 
    char *outputFilename = NULL;
 
-   char   *input;
-   size_t inputSize;
+   char   *input    = NULL;
+   size_t inputSize = 0;
 
    for (size_t argIdx = 1; argIdx < uargc; ++argIdx) {
       char   *arg = argv[argIdx];
