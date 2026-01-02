@@ -25,11 +25,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Compile The Program
+      - name: Create Binaries Directory
+        run: mkdir bin
+
+      - name: Compile On Linux
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          mkdir bin
           gcc src/main.c -o bin/${{ matrix.artifact_name }} \
             -O3 -Wall -Wextra -Werror --static
+
+      - name: Compile On Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          gcc src/main.c -o bin/${{ matrix.artifact_name }} \
+            -O3 -Wall -Wextra -Werror -static
+
+      - name: Compile On MacOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          gcc src/main.c -o bin/${{ matrix.artifact_name }} \
+            -O3 -Wall -Wextra -Werror
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
