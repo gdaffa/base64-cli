@@ -51,3 +51,13 @@ Output:
 ```
 SGVsbG8gV29ybGQ=
 ```
+
+## Future
+
+The program is much slower compared to `base64` CLI in linux. So maybe I will
+improve the encode/decode process by batch process and loop unrolling.
+
+## License
+
+The source code licensed under MIT license, that can be found in
+[LICENSE](./LICENSE) file.
