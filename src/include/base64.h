@@ -20,7 +20,7 @@ bool pB64_isRevMapInit = false;
  */
 void fB64_initReverseMap()
 {
-   memset(pB64_revMap, -1, UINT8_MAX + 1);
+   memset(pB64_revMap, -1, sizeof(pB64_revMap));
 
    // alpha, upper and lower case
    for (size_t i = 0; i < ALPHA_SIZE; ++i) {
