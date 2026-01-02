@@ -30,7 +30,10 @@ void *malloc2(size_t size)
    if (newmem == NULL) {
       failureExit(ERR_MSG_MALLOC);
    }
-   newmem[size - 1] = 0;
+   if (size > 0) {
+      newmem[size - 1] = 0;
+   }
+
    return (void*) newmem;
 }
 
