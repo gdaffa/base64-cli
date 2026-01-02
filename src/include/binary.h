@@ -32,15 +32,13 @@ char* strToBinary(char *str, size_t strSize, size_t *binaryLengthPtr)
    size_t binarySize = strSize * BYTE_SIZE + 1;
    char   *binary    = malloc2(binarySize);
 
-   if (binaryLengthPtr != NULL) {
-      *binaryLengthPtr = binarySize - 1;
-   }
-
    size_t binaryIdx = 0;
    for (size_t strIdx = 0; strIdx < strSize; ++strIdx) {
       fBin_parseChar(str[strIdx], binary + binaryIdx);
       binaryIdx += BYTE_SIZE;
    }
+
+   *binaryLengthPtr = binarySize - 1;
 
    return binary;
 }
