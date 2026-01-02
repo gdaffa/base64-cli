@@ -1,0 +1,64 @@
+name: Build and Distribute Program
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: b64-linux
+          - os: windows-latest
+            artifact_name: b64-windows.exe
+          - os: macos-latest
+            artifact_name: b64-macos
+
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Update MacOS Dependencies
+        if: ${{ matrix.os }} == 'macos-latest'
+        run: brew update && brew upgrade
+
+      - name: Update Linux Dependencies
+        if: ${{ matrix.os }} == 'ubuntu-latest'
+        run: apt update && apt upgrade
+
+      - name: Compile The Program
+        run: |
+          mkdir bin
+          gcc src/main.c -o bin/${{ matrix.artifact_name }} \
+            -O3 -Wall -Wextra -Werror --static
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: bin
+
+  release:
+    steps:
+      - name: Create Directory for Binaries
+        run: mkdir bin
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: bin
+
+      - name: Create Release
+        uses: softprops/action-gh-release@2
+        with:
+          files: |
+            bin/b64-linux
+            bin/b64-windows.exe
+            bin/b64-macos
+          
