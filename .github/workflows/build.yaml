@@ -36,6 +36,7 @@ jobs:
 
       - name: Compile On Windows
         if: matrix.os == 'windows-latest'
+        shell: bash
         run: |
           gcc src/main.c -o bin/${{ matrix.artifact_name }} \
             -O3 -Wall -Wextra -Werror -static
