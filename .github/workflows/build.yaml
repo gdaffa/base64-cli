@@ -45,6 +45,7 @@ jobs:
           path: bin
 
   release:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Create Directory for Binaries
