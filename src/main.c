@@ -114,7 +114,7 @@ int main(int argc, char **argv)
    if (inputFilename != NULL) {
       FILE *fptr = fopen(inputFilename, "rb");
       if (fptr == NULL) {
-         failureExit("ERROR: An error occured when opening the file.");
+         failureExit(ERR_MSG_FREAD);
       }
 
       fseek(fptr, 0, SEEK_END);
@@ -136,7 +136,7 @@ int main(int argc, char **argv)
    if (outputFilename != NULL) {
       FILE *fptr = fopen(outputFilename, "wb");
       if (fptr == NULL) {
-         failureExit("ERROR: An error occured when creating the file.");
+         failureExit(ERR_MSG_FWRITE);
       }
       fwrite(output, 1, outputSize, fptr);
       fclose(fptr);
