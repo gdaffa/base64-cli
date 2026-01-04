@@ -5,27 +5,16 @@ input, convert each input character to a binary format, and parse the input to
 encoded/decoded base64 format. The program has a support to read and write to a
 file with the current argument.
 
-## Prerequisites / Installation
-
-Install the C/C++ compiler to your computer, either GCC or LLVM, and clone this 
-repository to your computer.
-
 ## Usage
 
-After cloning this repository, compile the program with these command:
+The program accept the input from unknown argument, but has an option to read
+from a file.
 
-Example with GCC:
 ```bash
-gcc src/main.c -o b64
-```
-
-> [!TIP]
-> To optimize the peformance consider using -O flag.
-
-And run the program with this command:
-```bash
+# input from argument
 b64 [<options>] <input>
-# or
+
+# or input from a file
 b64 [<options>] --file <inputfile>
 ```
 
